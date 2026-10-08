@@ -1,20 +1,17 @@
-<?php /** @var array $w */ ?>
-<article class="work-card reveal">
-  <a href="<?= e(url('ishlar/' . $w['slug'])) ?>" class="work-card__link">
-    <div class="work-card__media">
+<?php /** @var array $w @var int $i @var int $span */ ?>
+<article class="wk c-<?= (int)$span ?>">
+  <a href="<?= e(url('ishlar/' . $w['slug'])) ?>">
+    <div class="wk__img">
       <?php if ($w['cover']): ?>
-        <img src="<?= e(media($w['cover'])) ?>" alt="<?= e($w['title']) ?>" loading="lazy" decoding="async">
+        <img src="<?= e(media($w['cover'])) ?>" alt="<?= e($w['title']) ?>" loading="<?= $i < 2 ? 'eager' : 'lazy' ?>" decoding="async">
       <?php else: ?>
-        <div class="placeholder" aria-hidden="true"><span><?= e(mb_substr($w['title'], 0, 1)) ?></span></div>
+        <span class="wk__empty">Rasm qo'shilmagan</span>
       <?php endif ?>
-      <span class="work-card__arrow"><?= icon('arrow-up-right', 22) ?></span>
     </div>
-    <div class="work-card__body">
-      <h3 class="work-card__title"><?= e($w['title']) ?></h3>
-      <p class="work-card__meta">
-        <?php if ($w['category']): ?><span><?= e($w['category']) ?></span><?php endif ?>
-        <?php if ($w['year']): ?><span><?= e($w['year']) ?></span><?php endif ?>
-      </p>
+    <div class="wk__cap">
+      <span class="mono muted"><?= sprintf('%02d', $i + 1) ?></span>
+      <h3 class="wk__title"><?= e($w['title']) ?></h3>
+      <span class="wk__meta mono muted"><?= e(implode(', ', array_filter([$w['category'], $w['year']]))) ?></span>
     </div>
   </a>
 </article>

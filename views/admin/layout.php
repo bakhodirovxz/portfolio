@@ -13,7 +13,7 @@ $is = fn($p) => $path === $p || ($p !== 'admin' && str_starts_with($path, $p)) ?
 <link rel="icon" href="<?= e(url('assets/img/favicon.svg')) ?>" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= e(asset('css/admin.css')) ?>">
 <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
@@ -21,7 +21,7 @@ $is = fn($p) => $path === $p || ($p !== 'admin' && str_starts_with($path, $p)) ?
 <div class="shell">
   <aside class="side" id="side">
     <a class="side__logo" href="<?= e(url('admin')) ?>">
-      <span class="mark"><?= e(mb_strtoupper(mb_substr(setting('site_name'), 0, 1))) ?></span>
+      <span class="mark"></span>
       <span><?= e(setting('site_name')) ?><small>Boshqaruv</small></span>
     </a>
     <nav class="side__nav">

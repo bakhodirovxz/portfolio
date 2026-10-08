@@ -45,13 +45,13 @@ $jsonld = $meta['jsonld'] ?? [];
 <meta name="twitter:card" content="<?= $imageUrl ? 'summary_large_image' : 'summary' ?>">
 <meta name="twitter:title" content="<?= e($title) ?>">
 <meta name="twitter:description" content="<?= e($desc) ?>">
-<meta name="theme-color" content="#f3f2ee" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0f0f0e" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f6f6f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="<?= e(url('assets/img/favicon.svg')) ?>" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="<?= e($siteName) ?> — Blog" href="<?= e(abs_url('feed.xml')) ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= e(asset('css/site.css')) ?>">
 <script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <?php if ($jsonld): ?>
@@ -66,26 +66,22 @@ $jsonld = $meta['jsonld'] ?? [];
 <body class="page-<?= e($nav ?: 'default') ?>">
 <?= setting('body_code') ?>
 <a class="skip" href="#main">Asosiy kontentga o'tish</a>
+<?php $tz = $GLOBALS['config']['timezone'] ?? 'Asia/Tashkent'; $city = setting('location') ? trim(explode(',', setting('location'))[0]) : 'Toshkent'; ?>
 
-<header class="header" id="top">
-  <div class="wrap header__inner">
-    <a class="logo" href="<?= e(url()) ?>" aria-label="<?= e($siteName) ?> — bosh sahifa">
-      <span class="logo__mark"><?= e(mb_strtoupper(mb_substr($siteName, 0, 1))) ?></span>
-      <span class="logo__text"><?= e($siteName) ?></span>
-    </a>
-    <nav class="nav" id="nav" aria-label="Asosiy menyu">
+<header class="hdr" id="top">
+  <div class="wrap grid hdr__in">
+    <a class="hdr__name" href="<?= e(url()) ?>"><?= e(setting('owner_name')) ?></a>
+    <span class="hdr__role mono"><?= e(setting('role')) ?></span>
+    <nav class="hdr__nav" id="nav" aria-label="Asosiy menyu">
       <a href="<?= e(url('ishlar')) ?>"<?= $nav === 'works' ? ' aria-current="page"' : '' ?>>Ishlar</a>
       <a href="<?= e(url('blog')) ?>"<?= $nav === 'blog' ? ' aria-current="page"' : '' ?>>Blog</a>
-      <a href="<?= e(url('#haqida')) ?>">Men haqimda</a>
-      <a href="<?= e(url('aloqa')) ?>" class="nav__cta<?= $nav === 'contact' ? ' is-active' : '' ?>">Bog'lanish <?= icon('arrow-up-right', 16) ?></a>
+      <a href="<?= e(url('#haqida')) ?>">Haqida</a>
+      <a href="<?= e(url('aloqa')) ?>"<?= $nav === 'contact' ? ' aria-current="page"' : '' ?>>Aloqa</a>
     </nav>
-    <div class="header__tools">
-      <button class="icon-btn" type="button" data-theme-toggle aria-label="Rangli rejimni almashtirish">
-        <span class="only-light"><?= icon('moon', 18) ?></span><span class="only-dark"><?= icon('sun', 18) ?></span>
-      </button>
-      <button class="icon-btn menu-btn" type="button" data-menu aria-controls="nav" aria-expanded="false" aria-label="Menyu">
-        <?= icon('menu', 20) ?>
-      </button>
+    <div class="hdr__tools mono">
+      <span class="hdr__clock muted" data-clock data-tz="<?= e($tz) ?>" title="Mahalliy vaqt"><?= e($city) ?> <span data-clock-time><?= e(date('H:i')) ?></span></span>
+      <button type="button" data-theme-toggle aria-label="Rangli rejimni almashtirish"><span class="only-light">Qorong'i</span><span class="only-dark">Yorug'</span></button>
+      <button class="menu-btn" type="button" data-menu aria-controls="nav" aria-expanded="false">Menyu</button>
     </div>
   </div>
 </header>
@@ -94,37 +90,47 @@ $jsonld = $meta['jsonld'] ?? [];
 <?= $content ?>
 </main>
 
-<footer class="footer">
+<footer class="ftr">
   <div class="wrap">
-    <div class="footer__top">
-      <div>
-        <p class="eyebrow">Loyihangiz bormi?</p>
-        <?php if (setting('email')): ?>
-          <a class="footer__mail" href="mailto:<?= e(setting('email')) ?>"><?= e(setting('email')) ?> <?= icon('arrow-up-right', 28) ?></a>
-        <?php else: ?>
-          <a class="footer__mail" href="<?= e(url('aloqa')) ?>">Menga yozing <?= icon('arrow-up-right', 28) ?></a>
+    <div class="grid ftr__grid">
+      <div class="c-3">
+        <p class="ftr__name"><?= e(setting('owner_name')) ?></p>
+        <p class="muted"><?= e(setting('role')) ?></p>
+      </div>
+      <div class="c-3">
+        <h2>Aloqa</h2>
+        <ul>
+          <?php if (setting('email')): ?><li><a href="mailto:<?= e(setting('email')) ?>"><?= e(setting('email')) ?></a></li><?php endif ?>
+          <?php if (setting('phone')): ?><li><a href="tel:<?= e(preg_replace('/[^\d+]/', '', setting('phone'))) ?>"><?= e(setting('phone')) ?></a></li><?php endif ?>
+          <li><a href="<?= e(url('aloqa')) ?>">So'rov yuborish</a></li>
+        </ul>
+      </div>
+      <div class="c-3">
+        <?php if ($links = social_links()): ?>
+        <h2>Tarmoqlar</h2>
+        <ul>
+          <?php foreach ($links as $l): ?>
+            <li><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener me"><?= e(social_name($l['platform'])) ?> <span class="mono muted">↗</span></a></li>
+          <?php endforeach ?>
+        </ul>
         <?php endif ?>
       </div>
-      <?php if ($links = social_links()): ?>
-      <ul class="socials" aria-label="Ijtimoiy tarmoqlar">
-        <?php foreach ($links as $l): ?>
-          <li><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener me" aria-label="<?= e(social_name($l['platform'])) ?>" title="<?= e(social_name($l['platform'])) ?>"><?= social_icon($l['platform']) ?></a></li>
-        <?php endforeach ?>
-      </ul>
-      <?php endif ?>
+      <div class="c-3">
+        <h2>Sahifalar</h2>
+        <ul>
+          <li><a href="<?= e(url('ishlar')) ?>">Ishlar</a></li>
+          <li><a href="<?= e(url('blog')) ?>">Blog</a></li>
+          <li><a href="<?= e(url('feed.xml')) ?>">RSS</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="footer__bottom">
-      <span>© <?= date('Y') ?> <?= e(setting('owner_name')) ?>. <?= e(setting('footer_text', 'Barcha huquqlar himoyalangan.')) ?></span>
-      <nav aria-label="Pastki menyu">
-        <a href="<?= e(url('ishlar')) ?>">Ishlar</a>
-        <a href="<?= e(url('blog')) ?>">Blog</a>
-        <a href="<?= e(url('aloqa')) ?>">Aloqa</a>
-        <a href="<?= e(url('feed.xml')) ?>">RSS</a>
-        <a href="#top">Yuqoriga ↑</a>
-      </nav>
+    <div class="ftr__bottom mono">
+      <span>© <?= date('Y') ?> <?= e(setting('owner_name')) ?><?= setting('footer_text') ? ' — ' . e(setting('footer_text')) : '' ?></span>
+      <a href="#top">Yuqoriga ↑</a>
     </div>
   </div>
 </footer>
+<img class="peek" alt="" aria-hidden="true">
 <script src="<?= e(asset('js/site.js')) ?>" defer></script>
 </body>
 </html>

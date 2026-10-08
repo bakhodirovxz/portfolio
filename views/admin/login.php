@@ -6,14 +6,14 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Kirish — <?= e(setting('site_name')) ?></title>
 <link rel="icon" href="<?= e(url('assets/img/favicon.svg')) ?>" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= e(asset('css/admin.css')) ?>">
 <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
 <body class="auth">
   <form class="auth__card" method="post" action="<?= e(url('admin/login')) ?>">
-    <a class="side__logo" href="<?= e(url()) ?>"><span class="mark"><?= e(mb_strtoupper(mb_substr(setting('site_name'), 0, 1))) ?></span><span><?= e(setting('site_name')) ?><small>Boshqaruv paneli</small></span></a>
-    <h1>Xush kelibsiz <em>qaytib</em></h1>
+    <a class="side__logo" href="<?= e(url()) ?>"><span class="mark"></span><span><?= e(setting('site_name')) ?><small>Boshqaruv paneli</small></span></a>
+    <h1>Kirish</h1>
     <?php if ($error): ?><div class="alert alert--error"><?= e($error) ?></div><?php endif ?>
     <?= csrf_field() ?>
     <label class="field"><span>Login</span><input name="username" required autofocus autocomplete="username"></label>

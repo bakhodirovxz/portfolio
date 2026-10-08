@@ -2,114 +2,113 @@
 $stats = array_map(fn($l) => array_pad(explode('|', $l, 2), 2, ''), lines(setting('stats')));
 $skills = array_values(array_filter(array_map('trim', explode(',', setting('skills')))));
 $services = lines(setting('services'));
+$n = 0;
+$num = function () use (&$n) { return sprintf('(%02d)', ++$n); };
+$tz = $GLOBALS['config']['timezone'] ?? 'Asia/Tashkent';
 ?>
 <section class="hero wrap">
-  <div class="hero__top">
-    <?php if (setting('availability')): ?>
-      <p class="badge"><span class="dot"></span><?= e(setting('availability')) ?></p>
-    <?php endif ?>
-    <p class="hero__who"><?= e(setting('owner_name')) ?> · <?= e(setting('role')) ?></p>
-  </div>
-  <h1 class="display hero__title"><?= accent(setting('hero_title')) ?></h1>
-  <div class="hero__bottom">
-    <p class="lead"><?= e(setting('hero_text')) ?></p>
-    <div class="actions">
-      <a class="btn btn--primary" href="<?= e(url('ishlar')) ?>">Ishlarni ko'rish <?= icon('arrow-right', 18) ?></a>
-      <a class="btn btn--ghost" href="<?= e(url('aloqa')) ?>">Loyiha muhokamasi</a>
+  <h1 class="hero__name"><?= e(setting('owner_name')) ?><span class="sr-only"> — <?= e(setting('role')) ?></span></h1>
+  <div class="grid hero__grid">
+    <p class="label c-3"><?= e(setting('role')) ?></p>
+    <div class="hero__text c-6">
+      <p class="statement"><?= accent(setting('hero_title')) ?></p>
+      <?php if (setting('hero_text')): ?><p class="lead"><?= e(setting('hero_text')) ?></p><?php endif ?>
+      <p class="links">
+        <a class="btn" href="<?= e(url('ishlar')) ?>">Ishlarni ko'rish <span class="ar">→</span></a>
+        <a class="tlink" href="<?= e(url('aloqa')) ?>">Loyiha haqida yozish</a>
+      </p>
     </div>
+    <dl class="facts c-3">
+      <?php if (setting('availability')): ?><div><dt>Holat</dt><dd class="status"><?= e(setting('availability')) ?></dd></div><?php endif ?>
+      <?php if (setting('location')): ?><div><dt>Joylashuv</dt><dd><?= e(setting('location')) ?></dd></div><?php endif ?>
+      <div><dt>Mahalliy vaqt</dt><dd data-clock data-tz="<?= e($tz) ?>"><span data-clock-time><?= e(date('H:i')) ?></span> <span class="muted">(UTC<?= e(date('P')) ?>)</span></dd></div>
+      <?php if (setting('email')): ?><div><dt>Email</dt><dd><a href="mailto:<?= e(setting('email')) ?>"><?= e(setting('email')) ?></a></dd></div><?php endif ?>
+    </dl>
   </div>
 </section>
 
-<?php if ($skills): ?>
-<div class="marquee" aria-label="Ko'nikmalar">
-  <div class="marquee__track">
-    <?php for ($r = 0; $r < 2; $r++): ?>
-      <ul <?= $r ? 'aria-hidden="true"' : '' ?>>
-        <?php foreach ($skills as $s): ?><li><?= e($s) ?></li><?php endforeach ?>
-      </ul>
-    <?php endfor ?>
-  </div>
-</div>
-<?php endif ?>
-
-<section class="section wrap" id="ishlar">
-  <div class="section__head">
-    <div>
-      <p class="eyebrow">Tanlangan ishlar</p>
-      <h2 class="h2">So'nggi <em>loyihalar</em></h2>
+<section class="sec wrap" id="ishlar">
+  <div class="grid sec__head">
+    <p class="label c-3"><?= $num() ?> Tanlangan ishlar</p>
+    <div class="sec__more">
+      <h2 class="h2">Loyihalar</h2>
+      <?php if ($worksTotal > 0): ?><a class="tlink" href="<?= e(url('ishlar')) ?>">Barcha ishlar <span class="mono">(<?= (int)$worksTotal ?>)</span></a><?php endif ?>
     </div>
-    <?php if ($worksTotal > 0): ?>
-      <a class="link-arrow" href="<?= e(url('ishlar')) ?>">Barchasi (<?= (int)$worksTotal ?>) <?= icon('arrow-right', 18) ?></a>
-    <?php endif ?>
   </div>
   <?php if ($works): ?>
-    <div class="works-grid">
-      <?php foreach ($works as $w) { require __DIR__ . '/_work_card.php'; } ?>
-    </div>
+    <?php require __DIR__ . '/_works_grid.php'; ?>
   <?php else: ?>
-    <div class="empty">Tez orada bu yerda ishlar paydo bo'ladi.</div>
+    <p class="empty">Ishlar tez orada qo'shiladi.</p>
   <?php endif ?>
 </section>
 
-<section class="section wrap about" id="haqida">
-  <div class="about__aside">
-    <?php if (setting('avatar')): ?>
-      <img class="about__photo reveal" src="<?= e(media(setting('avatar'))) ?>" alt="<?= e(setting('owner_name')) ?>" loading="lazy">
-    <?php endif ?>
-    <ul class="contact-list">
-      <?php if (setting('location')): ?><li><?= icon('map-pin', 18) ?><?= e(setting('location')) ?></li><?php endif ?>
-      <?php if (setting('email')): ?><li><?= icon('mail', 18) ?><a href="mailto:<?= e(setting('email')) ?>"><?= e(setting('email')) ?></a></li><?php endif ?>
-      <?php if (setting('phone')): ?><li><?= icon('phone', 18) ?><a href="tel:<?= e(preg_replace('/[^\d+]/', '', setting('phone'))) ?>"><?= e(setting('phone')) ?></a></li><?php endif ?>
-    </ul>
+<section class="sec wrap" id="haqida">
+  <div class="grid sec__head">
+    <p class="label c-3"><?= $num() ?> <?= e(setting('about_title')) ?></p>
   </div>
-  <div class="about__main">
-    <p class="eyebrow"><?= e(setting('about_title')) ?></p>
-    <div class="prose prose--lg reveal"><?= markdown(setting('about_text')) ?></div>
-    <?php if (setting('resume_url')): ?>
-      <a class="btn btn--ghost" href="<?= e(media(setting('resume_url'))) ?>" target="_blank" rel="noopener"><?= icon('download', 18) ?> Rezyume (CV)</a>
-    <?php endif ?>
-
-    <?php if ($stats): ?>
-    <dl class="stats">
-      <?php foreach ($stats as [$num, $label]): ?>
-        <div class="reveal"><dt><?= e($num) ?></dt><dd><?= e($label) ?></dd></div>
-      <?php endforeach ?>
-    </dl>
-    <?php endif ?>
-
-    <?php if ($services): ?>
-    <div class="services">
-      <p class="eyebrow">Xizmatlar</p>
-      <ol>
-        <?php foreach ($services as $i => $s): ?>
-          <li class="reveal"><span class="services__n"><?= sprintf('%02d', $i + 1) ?></span><span><?= e($s) ?></span></li>
-        <?php endforeach ?>
-      </ol>
+  <div class="grid">
+    <div class="c-3">
+      <?php if (setting('avatar')): ?><img class="about__photo" src="<?= e(media(setting('avatar'))) ?>" alt="<?= e(setting('owner_name')) ?>" loading="lazy"><?php endif ?>
     </div>
-    <?php endif ?>
+    <div class="c-7">
+      <div class="about__text"><?= markdown(setting('about_text')) ?></div>
+      <?php if (setting('resume_url')): ?>
+        <p class="about__cv"><a class="tlink" href="<?= e(media(setting('resume_url'))) ?>" target="_blank" rel="noopener">Rezyume (CV) <span class="mono">↗</span></a></p>
+      <?php endif ?>
+    </div>
   </div>
+
+  <?php if ($stats): ?>
+  <div class="grid sub">
+    <p class="label c-3">Raqamlarda</p>
+    <dl class="stats c-9">
+      <?php foreach ($stats as [$v, $l]): ?><div><dt><?= e($v) ?></dt><dd><?= e($l) ?></dd></div><?php endforeach ?>
+    </dl>
+  </div>
+  <?php endif ?>
+
+  <?php if ($services): ?>
+  <div class="grid sub">
+    <p class="label c-3">Xizmatlar</p>
+    <ol class="rows c-9">
+      <?php foreach ($services as $k => $s): ?><li><span class="mono"><?= sprintf('%02d', $k + 1) ?></span><span><?= e($s) ?></span></li><?php endforeach ?>
+    </ol>
+  </div>
+  <?php endif ?>
+
+  <?php if ($skills): ?>
+  <div class="grid sub">
+    <p class="label c-3">Asboblar</p>
+    <p class="skills c-9"><?= e(implode(', ', $skills)) ?>.</p>
+  </div>
+  <?php endif ?>
 </section>
 
 <?php if ($posts): ?>
-<section class="section wrap">
-  <div class="section__head">
-    <div>
-      <p class="eyebrow">Blog</p>
-      <h2 class="h2">Yozganlarim va <em>fikrlarim</em></h2>
+<section class="sec wrap">
+  <div class="grid sec__head">
+    <p class="label c-3"><?= $num() ?> Blog</p>
+    <div class="sec__more">
+      <h2 class="h2">So'nggi yozuvlar</h2>
+      <a class="tlink" href="<?= e(url('blog')) ?>">Barcha maqolalar</a>
     </div>
-    <a class="link-arrow" href="<?= e(url('blog')) ?>">Barcha maqolalar <?= icon('arrow-right', 18) ?></a>
   </div>
-  <div class="post-list">
+  <div class="posts">
     <?php foreach ($posts as $p) { require __DIR__ . '/_post_row.php'; } ?>
   </div>
 </section>
 <?php endif ?>
 
-<section class="section wrap">
-  <div class="cta reveal">
-    <p class="eyebrow">Aloqa</p>
-    <h2 class="display display--sm"><?= accent(setting('contact_title')) ?></h2>
-    <p class="lead"><?= e(setting('contact_text')) ?></p>
-    <a class="btn btn--primary btn--lg" href="<?= e(url('aloqa')) ?>">So'rov yuborish <?= icon('arrow-up-right', 20) ?></a>
+<section class="sec wrap">
+  <div class="grid sec__head">
+    <p class="label c-3"><?= $num() ?> Aloqa</p>
+    <div class="c-9 cta__body">
+      <p class="cta__title"><?= accent(setting('contact_title')) ?></p>
+      <p class="lead"><?= e(setting('contact_text')) ?></p>
+      <p class="links">
+        <a class="btn" href="<?= e(url('aloqa')) ?>">So'rov yuborish <span class="ar">→</span></a>
+        <?php if (setting('email')): ?><a class="tlink" href="mailto:<?= e(setting('email')) ?>"><?= e(setting('email')) ?></a><?php endif ?>
+      </p>
+    </div>
   </div>
 </section>

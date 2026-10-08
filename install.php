@@ -109,13 +109,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ok) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>O'rnatish</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= h(BASE_PATH) ?>/assets/css/admin.css">
 </head>
 <body class="auth install">
 <form class="auth__card" method="post">
-  <a class="side__logo"><span class="mark">P</span><span>Portfolio<small>O'rnatish</small></span></a>
-  <h1>Saytni <em>sozlaymiz</em></h1>
+  <a class="side__logo"><span class="mark"></span><span>Portfolio<small>O'rnatish</small></span></a>
+  <h1>O'rnatish</h1>
 
   <?php if (!$ok): ?>
     <div class="alert alert--error">Server talablari bajarilmagan:</div>

@@ -1,12 +1,11 @@
 <?php /** @var array $p */ ?>
-<article class="post-row reveal">
+<article class="post-r">
   <a href="<?= e(url('blog/' . $p['slug'])) ?>">
-    <time datetime="<?= e(date('Y-m-d', strtotime($p['published_at']))) ?>"><?= e(fmt_date($p['published_at'])) ?></time>
-    <div class="post-row__main">
-      <h3><?= e($p['title']) ?></h3>
-      <p><?= e($p['excerpt'] ?: excerpt($p['content'], 150)) ?></p>
+    <time class="mono muted" datetime="<?= e(date('Y-m-d', strtotime($p['published_at']))) ?>"><?= e(date('d.m.Y', strtotime($p['published_at']))) ?></time>
+    <div class="post-r__main">
+      <h3 class="post-r__t"><?= e($p['title']) ?></h3>
+      <p class="post-r__x"><?= e($p['excerpt'] ?: excerpt($p['content'], 160)) ?></p>
     </div>
-    <span class="post-row__meta"><?= reading_time($p['content']) ?> daq o'qish</span>
-    <span class="post-row__arrow"><?= icon('arrow-right', 22) ?></span>
+    <span class="post-r__rt mono muted"><?= reading_time($p['content']) ?> daq</span>
   </a>
 </article>

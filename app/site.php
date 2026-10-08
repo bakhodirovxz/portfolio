@@ -1,9 +1,14 @@
 <?php
 declare(strict_types=1);
 
+/** Kategoriya => ishlar soni */
 function work_categories(): array
 {
-    return array_column(db_all("SELECT category, COUNT(*) c FROM works WHERE status = 'published' AND category <> '' GROUP BY category ORDER BY c DESC"), 'category');
+    $out = [];
+    foreach (db_all("SELECT category, COUNT(*) c FROM works WHERE status = 'published' AND category <> '' GROUP BY category ORDER BY c DESC, category") as $r) {
+        $out[$r['category']] = (int)$r['c'];
+    }
+    return $out;
 }
 
 function person_jsonld(): array
@@ -58,7 +63,9 @@ function site_works(): never
     view('site/works', [
         'works' => $works,
         'categories' => work_categories(),
+        'total' => (int)db_val("SELECT COUNT(*) FROM works WHERE status = 'published'"),
         'active' => $cat,
+        'mode' => input('korinish') === 'tor' ? 'grid' : 'list',
         'nav' => 'works',
         'meta' => [
             'title' => $cat !== '' ? $cat . ' — Ishlar' : 'Ishlar',
@@ -148,7 +155,7 @@ function site_post(string $slug): never
         not_found();
     }
     db_exec('UPDATE posts SET views = views + 1 WHERE id = ?', [$post['id']]);
-    $related = db_all("SELECT title, slug, published_at, cover FROM posts WHERE status = 'published' AND published_at <= ? AND id <> ? ORDER BY published_at DESC LIMIT 2", [now(), $post['id']]);
+    $related = db_all("SELECT * FROM posts WHERE status = 'published' AND published_at <= ? AND id <> ? ORDER BY published_at DESC LIMIT 2", [now(), $post['id']]);
 
     $desc = $post['meta_description'] ?: ($post['excerpt'] ?: excerpt($post['content']));
     view('site/post', [
